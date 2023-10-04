@@ -12,12 +12,14 @@ export enum WsEvent {
   REFRESH = "REFRESH",
   EVAL = "EVAL",
   EVALRESULT = "EVALRESULT",
+  EVALRESULTMANAGER = "EVALRESULTMANAGER",
   CLIENTS = "CLIENTS",
   PROXY = "PROXY",
   PAYLOADSTATUS = "PAYLOADSTATUS",
   SENDPAYLOAD = "SENDPAYLOAD",
   PAYLOAD = "PAYLOAD",
   PAYLOADRESULT = "PAYLOADRESULT",
+  PAYLOADRESULTMANAGER = "PAYLOADRESULTMANAGER",
   PAYLOADERROR = "PAYLOADERROR",
 }
 export interface PacketMap {
@@ -29,15 +31,30 @@ export interface PacketMap {
     code: string;
     result: any;
   };
+  [WsEvent.EVALRESULTMANAGER]: {
+    id: number;
+    code: string;
+    result: any;
+  };
   [WsEvent.CLIENTS]: Client[];
   [WsEvent.PROXY]: {
     id: number;
     packet: Packet<any>;
   };
   [WsEvent.PAYLOADSTATUS]: PAYLOADSTATUS;
-  [WsEvent.SENDPAYLOAD]: string;
-  [WsEvent.PAYLOAD]: undefined;
+  [WsEvent.SENDPAYLOAD]: {
+    type: PAYLOAD_TYPE;
+    code: string;
+  };
+  [WsEvent.PAYLOAD]: {
+    type: PAYLOAD_TYPE;
+    code?: string;
+  };
   [WsEvent.PAYLOADRESULT]: any;
+  [WsEvent.PAYLOADRESULTMANAGER]: {
+    id: number;
+    result: any;
+  };
   [WsEvent.PAYLOADERROR]: string;
 }
 
@@ -79,6 +96,12 @@ export enum PAYLOADSTATUS {
   IDLE = "IDLE",
   COMPILING = "COMPILING",
   RUNNING = "RUNNING",
+}
+
+export enum PAYLOAD_TYPE {
+  RUST,
+  JAVASCRIPT,
+  TYPESCRIPT,
 }
 
 export interface Client {

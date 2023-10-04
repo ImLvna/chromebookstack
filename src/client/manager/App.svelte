@@ -30,17 +30,28 @@
   const currentClient = writable<number>(-1);
   setContext("currentClient", currentClient);
 
+  const evalResult = writable<string>("");
+  setContext("evalResult", evalResult);
+
   const payloadStatus = writable<PAYLOADSTATUS>(PAYLOADSTATUS.IDLE);
   setContext("payloadStatus", payloadStatus);
 
   const payloadError = writable<string>("");
   setContext("payloadError", payloadError);
 
+  const payloadResult = writable<any[]>([]);
+  setContext("payloadResult", payloadResult);
+
   const notification = writable<string>("");
   setContext("notification", notification);
 
   function connectWs() {
-    ws = new WebSocket("ws://localhost:8080/manager/ws");
+    const base = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const domain = import.meta.env.DEV
+      ? "localhost:8080"
+      : window.location.host;
+
+    ws = new WebSocket(`${base}${domain}/manager/ws`);
     window.ws = ws;
     ws.onclose = () => {
       setTimeout(connectWs, 100);
@@ -68,30 +79,32 @@
   connectWs();
 </script>
 
-<div class="tabs">
-  {#each Object.keys(Tabs) as tab}
-    <button
-      class:active={$currentTab === tab}
-      on:click={() =>
-        // @ts-ignore
-        ($currentTab = tab)}
-    >
-      {tab}
-    </button>
-  {/each}
-</div>
-<div class="notificationWrapper">
-  {#each $notificationList as notification}
-    <div
-      class="notification"
-      transition:slide={{ axis: "y" }}
-      data-notif-id={Math.random()}
-    >
-      <div class="notification-text">
-        {notification}
+<div class="sticky">
+  <div class="tabs">
+    {#each Object.keys(Tabs) as tab}
+      <button
+        class:active={$currentTab === tab}
+        on:click={() =>
+          // @ts-ignore
+          ($currentTab = tab)}
+      >
+        {tab}
+      </button>
+    {/each}
+  </div>
+  <div class="notificationWrapper">
+    {#each $notificationList as notification}
+      <div
+        class="notification"
+        transition:slide={{ axis: "y" }}
+        data-notif-id={Math.random()}
+      >
+        <div class="notification-text">
+          {notification}
+        </div>
       </div>
-    </div>
-  {/each}
+    {/each}
+  </div>
 </div>
 
 <div class="page">
@@ -105,6 +118,12 @@
     font-family: sans-serif;
     background-color: #333;
     color: #fff;
+  }
+
+  .sticky {
+    position: sticky;
+    top: 0;
+    z-index: 999;
   }
 
   .page {

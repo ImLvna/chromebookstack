@@ -10,6 +10,7 @@
   const clients = getContext<Writable<Client[]>>("clients");
   const currentTab = getContext<Writable<CURRENT_TAB>>("currentTab");
   const notification = getContext<Writable<string>>("notification");
+  const evalResult = getContext<Writable<string>>("evalResult");
 
   const client = writable<Client>({} as any);
   $: {
@@ -21,14 +22,13 @@
     }
   }
 
-  let editor: editor.IStandaloneCodeEditor;
   let packetType: WsEvent;
 
   function sendPacket() {
-    const value = editor.getValue();
+    $evalResult = "";
     const packet = new Packet(
       packetType,
-      packetType === WsEvent.EVAL ? value : JSON.parse(value)
+      packetType === WsEvent.EVAL ? $code : JSON.parse($code)
     );
     const outPacket = new Packet(WsEvent.PROXY, {
       id: $client.id,
@@ -37,15 +37,15 @@
     outPacket.send(window.ws);
   }
 
-  const defaultCode = "";
+  const code = writable<string>("");
 
   function checkLang() {
     if (packetType === WsEvent.EVAL) {
       lang.set("javascript");
-      editor.setValue("");
+      $code = "console.log('Hello World!')";
     } else {
       lang.set("json");
-      editor.setValue("{}");
+      $code = "{}";
     }
   }
 
@@ -63,12 +63,18 @@
 </select>
 <button on:click={sendPacket}>Send</button>
 <div class="editor">
-  <Monaco {defaultCode} bind:editor language={$lang} />
+  <Monaco {code} language={lang} />
 </div>
+{#if $evalResult}
+  <h2>Result:</h2>
+  <div class="editor smaller">
+    <Monaco code={evalResult} language="javascript" />
+  </div>
+{/if}
 
 <style>
   .editor {
     width: 100%;
-    height: 50%;
+    height: 20vh;
   }
 </style>

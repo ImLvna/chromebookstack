@@ -4,9 +4,8 @@ import { startUppercase } from "../utils";
 
 export default (
   ws: WebSocket,
-  packet: Packet<WsEvent.PAYLOADERROR>,
+  packet: Packet<WsEvent.PAYLOADRESULTMANAGER>,
   contexts: Contexts
 ) => {
-  contexts.notification.set(`Payload failed to compile!`);
-  contexts.payloadError.set(packet.data);
+  contexts.payloadResult.update((all) => [...all, packet.data]);
 };

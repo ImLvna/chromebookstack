@@ -7,4 +7,6 @@ declare global {
   }
 }
 
-declare const DEFAULTPAYLOAD: string;
+declare const DEFAULT_RUST: string;
+declare const DEFAULT_JS: string;
+declare const DEFAULT_TS: string;

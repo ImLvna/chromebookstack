@@ -8,7 +8,8 @@ extern "C" {
 }
 
 #[wasm_bindgen]
-pub fn main() {
+pub fn main() -> f64 {
     // Your code here
     log("Hello from Rust!");
+    42.0
 }

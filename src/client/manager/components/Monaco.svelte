@@ -4,12 +4,37 @@
   import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
   import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
   import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+  import type { Writable } from "svelte/store";
 
-  export let defaultCode: string;
-  export let language: string;
+  export let code: Writable<string> | string;
+  export let language: Writable<string> | string;
   let editorElement: HTMLDivElement;
   export let editor: monaco.editor.IStandaloneCodeEditor | null = null;
   let model: monaco.editor.ITextModel;
+
+  let writableCode: Writable<string>;
+  let stringCode: string;
+  if (typeof code === "object") {
+    writableCode = code;
+    code.subscribe((newCode) => {
+      const oldCode = editor?.getValue();
+      if (oldCode === newCode) return;
+      editor?.setValue(newCode);
+    });
+  } else {
+    stringCode = code;
+  }
+  let writableLanguage: Writable<string>;
+  let stringLanguage: string;
+  if (typeof language === "object") {
+    writableLanguage = language;
+    language.subscribe((newLanguage) => {
+      if (!model) return;
+      monaco.editor.setModelLanguage(model, newLanguage);
+    });
+  } else {
+    stringLanguage = language;
+  }
 
   function loadCode(code: string, language: string) {
     model = monaco.editor.createModel(code, language);
@@ -37,7 +62,14 @@
       theme: "vs-dark",
     });
 
-    loadCode(defaultCode, language);
+    let lang = stringLanguage || $writableLanguage;
+
+    if (writableCode) loadCode($writableCode, lang);
+    else loadCode(stringCode, lang);
+
+    editor.onDidChangeModelContent(() => {
+      writableCode?.set(editor!.getValue());
+    });
   });
 
   onDestroy(() => {

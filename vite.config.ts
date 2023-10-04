@@ -1,7 +1,10 @@
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { mkdir, rm } from "fs/promises";
 import { defineConfig } from "vite";
 
-const defaultPayload = await Bun.file("./build/default.rs").text();
+const defaultRust = await Bun.file("./build/default.rs").text();
+const defaultJs = await Bun.file("./build/default.js").text();
+const defaultTs = await Bun.file("./build/default.ts").text();
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,11 +12,13 @@ export default defineConfig({
   root: "src/client/manager",
   base: "/manager/",
   build: {
-    outDir: "../../../public/manager",
+    outDir: "../../../dist/manager",
     emptyOutDir: true,
   },
 
   define: {
-    DEFAULTPAYLOAD: `\`${defaultPayload}\``,
+    DEFAULT_RUST: `\`${defaultRust}\``,
+    DEFAULT_JS: `\`${defaultJs}\``,
+    DEFAULT_TS: `\`${defaultTs}\``,
   },
 });

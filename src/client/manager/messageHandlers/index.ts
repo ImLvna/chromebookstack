@@ -16,5 +16,9 @@ import PAYLOADSTATUS from "./PAYLOADSTATUS";
 messageHandlers[WsEvent.PAYLOADSTATUS] = PAYLOADSTATUS;
 import PAYLOADERROR from "./PAYLOADERROR";
 messageHandlers[WsEvent.PAYLOADERROR] = PAYLOADERROR;
+import PAYLOADRESULT from "./PAYLOADRESULT";
+messageHandlers[WsEvent.PAYLOADRESULTMANAGER] = PAYLOADRESULT;
+import EVALRESULT from "./EVALRESULT";
+messageHandlers[WsEvent.EVALRESULTMANAGER] = EVALRESULT;
 
 export default messageHandlers;

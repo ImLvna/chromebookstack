@@ -5,8 +5,9 @@ import {
   WsEvent,
   PAYLOADSTATUS,
   ClientType,
+  PAYLOAD_TYPE,
 } from "../shared/websocket";
-import { rename } from "fs/promises";
+import { rename, rm } from "fs/promises";
 import { clients } from "..";
 
 export const event = WsEvent.SENDPAYLOAD;
@@ -15,7 +16,7 @@ export default async (
   ws: ServerWebSocket<Client>,
   packet: Packet<WsEvent.SENDPAYLOAD>
 ) => {
-  const code = packet.data;
+  const { code, type } = packet.data;
 
   const statusPacket = new Packet(
     WsEvent.PAYLOADSTATUS,
@@ -23,44 +24,75 @@ export default async (
   );
   statusPacket.sendAll(clients, ClientType.MANAGER);
 
-  // Build the worker
+  switch (type) {
+    case PAYLOAD_TYPE.RUST:
+      // Build the worker
 
-  const libFile = Bun.file("./build/src/lib.rs");
-  await Bun.write(libFile, code);
+      await rm("./dist/payload", { recursive: true, force: true });
 
-  const proc = Bun.spawn(
-    [
-      "wasm-pack",
-      "build",
-      "--target",
-      "web",
-      "--no-typescript",
-      "--no-pack",
-      "--out-name",
-      "wasm",
-      "--out-dir",
-      "../public/payload",
-    ],
-    {
-      cwd: "./build",
-      stdio: ["ignore", "ignore", "pipe"],
-    }
-  );
+      const libFile = Bun.file("./build/src/lib.rs");
+      await Bun.write(libFile, code);
 
-  const output = await new Response(proc.stderr).text();
+      const proc = Bun.spawn(
+        [
+          "wasm-pack",
+          "build",
+          "--target",
+          "web",
+          "--no-typescript",
+          "--no-pack",
+          "--out-name",
+          "wasm",
+          "--out-dir",
+          "../dist/payload",
+        ],
+        {
+          cwd: "./build",
+          stdio: ["ignore", "ignore", "pipe"],
+        }
+      );
 
-  const failed = output.includes("error:");
+      const output = await new Response(proc.stderr).text();
 
-  if (failed) {
-    const errorPacket = new Packet(WsEvent.PAYLOADERROR, output);
-    errorPacket.sendAll(clients, ClientType.MANAGER);
-    statusPacket.data = PAYLOADSTATUS.IDLE;
-    statusPacket.sendAll(clients, ClientType.MANAGER);
-    return;
+      const failed = output.includes("error:");
+
+      if (failed) {
+        const errorPacket = new Packet(WsEvent.PAYLOADERROR, output);
+        errorPacket.sendAll(clients, ClientType.MANAGER);
+        statusPacket.data = PAYLOADSTATUS.IDLE;
+        statusPacket.sendAll(clients, ClientType.MANAGER);
+        return;
+      }
+
+      statusPacket.data = PAYLOADSTATUS.RUNNING;
+      statusPacket.sendAll(clients, ClientType.MANAGER);
+      const payloadPacket = new Packet(WsEvent.PAYLOAD, {
+        type,
+      });
+      payloadPacket.sendAll(clients, ClientType.WORKER);
+
+      break;
+
+    case PAYLOAD_TYPE.JAVASCRIPT:
+      const outPacketJs = new Packet(WsEvent.PAYLOAD, {
+        type,
+        code,
+      });
+      statusPacket.data = PAYLOADSTATUS.RUNNING;
+      statusPacket.sendAll(clients, ClientType.MANAGER);
+      outPacketJs.sendAll(clients, ClientType.WORKER);
+      break;
+
+    case PAYLOAD_TYPE.TYPESCRIPT:
+      const transpiler = new Bun.Transpiler();
+      const jsCode = await transpiler.transform(code, "ts");
+      const outPacketTs = new Packet(WsEvent.PAYLOAD, {
+        type: PAYLOAD_TYPE.JAVASCRIPT,
+        code: jsCode,
+      });
+      statusPacket.data = PAYLOADSTATUS.RUNNING;
+      statusPacket.sendAll(clients, ClientType.MANAGER);
+      outPacketTs.sendAll(clients, ClientType.WORKER);
+      break;
   }
-
-  statusPacket.data = PAYLOADSTATUS.RUNNING;
-  statusPacket.sendAll(clients, ClientType.MANAGER);
-  const payloadPacket = new Packet(WsEvent.PAYLOAD, undefined);
-  payloadPacket.sendAll(clients, ClientType.WORKER);
 };

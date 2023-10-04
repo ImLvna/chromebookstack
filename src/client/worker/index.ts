@@ -24,7 +24,10 @@ export function setStatus(status: ClientStatus) {
 }
 
 function main() {
-  const ws = new WebSocket("ws://localhost:8080/worker/ws");
+  const base = window.location.protocol === "https:" ? "wss://" : "ws://";
+  const domain = window.location.host;
+
+  const ws = new WebSocket(`${base}${domain}/worker/ws`);
   window.ws = ws;
 
   ws.onopen = () => {

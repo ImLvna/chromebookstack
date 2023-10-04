@@ -21,18 +21,9 @@ for (const file of await readdir("./src/messageHandlers")) {
 
 export const clients: ServerWebSocket<Client>[] = [];
 
-const workerBuild = await Bun.build({
-  entrypoints: ["./src/client/worker/index.ts"],
-  target: "browser",
-  minify: true,
-  publicPath: "/worker/",
-});
-if (!workerBuild.success) throw new Error("Failed to transform");
-const workerScript = await workerBuild.outputs[0].text();
-
 const app = Router();
 
-function registerWs(type: ClientType, server: Server, req: Request) {
+app.get("/worker/ws", (req, server: Server) => {
   const idsInUse = clients.map((client) => client.data.id);
   let id = 0;
   for (let i = 0; i < Math.max(...idsInUse) + 2; i++) {
@@ -45,7 +36,7 @@ function registerWs(type: ClientType, server: Server, req: Request) {
     data: {
       id,
       status: ClientStatus.IDLE,
-      type: type,
+      type: ClientType.WORKER,
       lastHeartbeat: Date.now(),
     },
   });
@@ -54,31 +45,40 @@ function registerWs(type: ClientType, server: Server, req: Request) {
   } else {
     return new Response("Upgraded");
   }
-}
-
-app.get("/worker", () => {
-  return new Response(Bun.file("./src/client/worker/index.html"));
 });
-app.get("/worker/ws", (req, server: Server) => {
-  return registerWs(ClientType.WORKER, server, req);
-});
-app.get("/worker/index.js", async (req) => {
-  return new Response(workerScript, {
-    headers: {
-      "content-type": "application/javascript",
+app.get("/manager/ws", (req, server: Server) => {
+  const success = server.upgrade(req, {
+    data: {
+      id: -1,
+      status: ClientStatus.IDLE,
+      type: ClientType.MANAGER,
+      lastHeartbeat: Date.now(),
     },
   });
+  if (!success) {
+    return new Response("Failed to upgrade", { status: 400 });
+  } else {
+    return new Response("Upgraded");
+  }
+});
+
+app.get("/worker", () => {
+  return new Response(Bun.file("./dist/worker/index.html"));
 });
 app.get("/worker/*", (req) => {
-  return new Response(Bun.file("./src/client" + new URL(req.url).pathname));
+  return new Response(Bun.file("./dist" + new URL(req.url).pathname));
 });
 
 app.get("/manager", (req) => {
-  return new Response(Bun.file("./public/manager/index.html"));
+  return new Response(Bun.file("./dist/manager/index.html"));
 });
-app.get("/manager/ws", (req, server: Server) => {
-  return registerWs(ClientType.MANAGER, server, req);
+app.get("/manager/*", (req) => {
+  return new Response(Bun.file("./dist" + new URL(req.url).pathname));
 });
+app.get("/payload/*", (req) => {
+  return new Response(Bun.file("./dist" + new URL(req.url).pathname));
+});
+
 app.get("*", (req) => {
   return new Response(Bun.file("./public" + new URL(req.url).pathname));
 });

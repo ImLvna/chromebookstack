@@ -5,8 +5,6 @@
     "target": "esnext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
     "composite": true,
     "strict": true,
     "downlevelIteration": true,
@@ -24,7 +22,8 @@
     "src/**/*.ts",
     "src/**/*.js",
     "src/**/*.svelte",
-    "vite.config.ts"
+    "vite.config.ts",
+    "./build.ts"
   ],
   "exclude": ["src/client/**/*"]
 }

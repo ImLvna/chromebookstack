@@ -15,7 +15,8 @@ export default async (
   ws: ServerWebSocket<Client>,
   packet: Packet<WsEvent.PAYLOADRESULT>
 ) => {
-  console.log(packet.data);
+  const managerPacket = new Packet(WsEvent.PAYLOADRESULTMANAGER, packet.data);
+  managerPacket.sendAll(clients, ClientType.MANAGER);
   // Check if all are idle
   if (
     clients.reduce(

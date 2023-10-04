@@ -4,9 +4,12 @@ import { startUppercase } from "../utils";
 
 export default (
   ws: WebSocket,
-  packet: Packet<WsEvent.PAYLOADERROR>,
+  packet: Packet<WsEvent.EVALRESULTMANAGER>,
   contexts: Contexts
 ) => {
-  contexts.notification.set(`Payload failed to compile!`);
-  contexts.payloadError.set(packet.data);
+  let data = packet.data.result as string;
+  if (typeof data === "object") {
+    data = JSON.stringify(data, null, 2);
+  } else data = data.toString();
+  contexts.evalResult.set(data);
 };

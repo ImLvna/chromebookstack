@@ -1,7 +1,7 @@
 {
   "name": "chromebookstack",
   "scripts": {
-    "build": "bun run --bun vite build",
+    "build": "bun run ./build.ts && bun run --bun vite build",
     "dev": "bun run --bun vite dev",
     "start": "bun run src/index.ts",
     "check": "svelte-check --tsconfig ./tsconfig.json"
