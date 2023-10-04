@@ -1,15 +1,20 @@
 {
   "name": "chromebookstack",
+  "scripts": {
+    "build": "bun run --bun vite build",
+    "dev": "bun run --bun vite dev",
+    "start": "bun run src/index.ts",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
   "module": "src/index.ts",
   "devDependencies": {
-    "@sveltejs/kit": "^1.25.1",
     "@sveltejs/vite-plugin-svelte": "^2.4.6",
     "@tsconfig/svelte": "^5.0.2",
     "bun-types": "latest",
     "monaco-editor": "^0.43.0",
-    "sass": "^1.68.0",
     "svelte": "^4.2.1",
     "svelte-adapter-bun": "^0.5.0",
+    "svelte-check": "^3.5.2",
     "svelte-preprocess": "^5.0.4",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",

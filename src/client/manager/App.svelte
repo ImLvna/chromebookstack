@@ -22,7 +22,6 @@
   let ws: WebSocket;
 
   const clients = writable<Client[]>([]);
-  console.log(clients);
   setContext("clients", clients);
 
   const currentTab = writable<CURRENT_TAB>(CURRENT_TAB.HOME);
@@ -96,7 +95,7 @@
   <svelte:component this={Tabs[$currentTab]} />
 </div>
 
-<style lang="scss">
+<style>
   :global(body) {
     margin: 0;
     padding: 0;
@@ -119,25 +118,22 @@
     width: 100%;
     height: 50px;
     background-color: #222;
+  }
 
-    button {
-      /* make them pretty */
-      border: none;
-      background-color: #222;
-      color: #fff;
-      padding: 10px;
-      margin: 0 10px;
-      cursor: pointer;
-      transition: 0.2s ease-in-out;
+  .tabs button {
+    /* make them pretty */
+    border: none;
+    background-color: #222;
+    color: #fff;
+    padding: 10px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+  }
 
-      &:hover {
-        background-color: #333;
-      }
-
-      &.active {
-        background-color: #333;
-      }
-    }
+  .tabs button:hover,
+  .tabs button.active {
+    background-color: #333;
   }
 
   .notificationWrapper {
@@ -150,7 +146,6 @@
     font-size: 1.5rem;
     z-index: 999;
     overflow: hidden;
-    text-wrap: nowrap;
     border-radius: 0 0 0 10px;
   }
 
