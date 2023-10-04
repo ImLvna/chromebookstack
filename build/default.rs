@@ -7,7 +7,7 @@ extern "C" {
     fn log(s: &str);
 }
 
-#[wasm_bindgen(start)]
+#[wasm_bindgen]
 pub fn main() {
     // Your code here
     log("Hello from Rust!");

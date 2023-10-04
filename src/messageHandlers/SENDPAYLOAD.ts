@@ -26,7 +26,7 @@ export default async (
   // Build the worker
 
   const libFile = Bun.file("./build/src/lib.rs");
-  Bun.write(libFile, code);
+  await Bun.write(libFile, code);
 
   const proc = Bun.spawn(
     [
@@ -47,7 +47,17 @@ export default async (
     }
   );
 
-  await new Response(proc.stderr).text();
+  const output = await new Response(proc.stderr).text();
+
+  const failed = output.includes("error:");
+
+  if (failed) {
+    const errorPacket = new Packet(WsEvent.PAYLOADERROR, output);
+    errorPacket.sendAll(clients, ClientType.MANAGER);
+    statusPacket.data = PAYLOADSTATUS.IDLE;
+    statusPacket.sendAll(clients, ClientType.MANAGER);
+    return;
+  }
 
   statusPacket.data = PAYLOADSTATUS.RUNNING;
   statusPacket.sendAll(clients, ClientType.MANAGER);

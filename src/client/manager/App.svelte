@@ -27,11 +27,14 @@
   const currentTab = writable<CURRENT_TAB>(CURRENT_TAB.HOME);
   setContext("currentTab", currentTab);
 
-  const currentClient = writable<number>(0);
+  const currentClient = writable<number>(-1);
   setContext("currentClient", currentClient);
 
   const payloadStatus = writable<PAYLOADSTATUS>(PAYLOADSTATUS.IDLE);
   setContext("payloadStatus", payloadStatus);
+
+  const payloadError = writable<string>("");
+  setContext("payloadError", payloadError);
 
   const notification = writable<string>("");
   setContext("notification", notification);

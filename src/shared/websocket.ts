@@ -18,6 +18,7 @@ export enum WsEvent {
   SENDPAYLOAD = "SENDPAYLOAD",
   PAYLOAD = "PAYLOAD",
   PAYLOADRESULT = "PAYLOADRESULT",
+  PAYLOADERROR = "PAYLOADERROR",
 }
 export interface PacketMap {
   [WsEvent.HEARTBEAT]: undefined;
@@ -37,6 +38,7 @@ export interface PacketMap {
   [WsEvent.SENDPAYLOAD]: string;
   [WsEvent.PAYLOAD]: undefined;
   [WsEvent.PAYLOADRESULT]: any;
+  [WsEvent.PAYLOADERROR]: string;
 }
 
 export class Packet<T extends WsEvent> {

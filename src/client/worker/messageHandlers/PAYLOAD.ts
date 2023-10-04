@@ -18,9 +18,9 @@ export default async (ws: WebSocket, packet: Packet<WsEvent.PAYLOAD>) => {
     let result = payload();
     setStatus(ClientStatus.UPLOADING);
     if (result instanceof Promise) result = await result;
+    setStatus(ClientStatus.IDLE);
     const resultPacket = new Packet(WsEvent.PAYLOADRESULT, result);
     resultPacket.send(ws);
-    setStatus(ClientStatus.IDLE);
   } catch (e) {
     const resultPacket = new Packet(WsEvent.PAYLOADRESULT, e);
     resultPacket.send(ws);

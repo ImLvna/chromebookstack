@@ -9,7 +9,8 @@
         const payload = await import(
           `/payload/wasm.js?cachebust=${Date.now()}`
         );
-        return payload.default;
+        const init = await payload.default();
+        return init.main;
       }
       window.getPayload = getPayload;
     </script>

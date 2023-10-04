@@ -19,5 +19,6 @@ export interface Contexts {
   clients: Writable<Client[]>;
   currentTab: Writable<CURRENT_TAB>;
   payloadStatus: Writable<PAYLOADSTATUS>;
+  payloadError: Writable<string>;
   notification: Writable<string>;
 }

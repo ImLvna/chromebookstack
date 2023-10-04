@@ -41,7 +41,7 @@
   });
 
   onDestroy(() => {
-    monaco?.editor.getModels().forEach((model) => model.dispose());
+    editor?.getModel()?.dispose();
     editor?.dispose();
   });
 </script>

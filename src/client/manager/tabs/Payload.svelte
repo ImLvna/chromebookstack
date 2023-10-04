@@ -11,8 +11,8 @@
   import Monaco from "../components/Monaco.svelte";
   import { CURRENT_TAB } from "../types/contexts";
 
-  const clients = getContext<Writable<Client[]>>("clients");
   const payloadStatus = getContext<Writable<PAYLOADSTATUS>>("payloadStatus");
+  const payloadError = getContext<Writable<string>>("payloadError");
 
   let editor: editor.IStandaloneCodeEditor;
 
@@ -20,6 +20,7 @@
 
   function sendPayload() {
     const code = editor.getValue();
+    $payloadError = "";
     const packet = new Packet(WsEvent.SENDPAYLOAD, code);
     packet.send(window.ws);
   }
@@ -33,8 +34,15 @@
 <div class="editor">
   <Monaco {defaultCode} bind:editor language="rust" />
 </div>
+{#if $payloadError}
+  <h2 class="error">Error:</h2>
+  <Monaco defaultCode={$payloadError} language="rust" />
+{/if}
 
 <style>
+  .error {
+    color: red;
+  }
   .editor {
     width: 100%;
     height: 50%;

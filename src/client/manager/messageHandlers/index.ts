@@ -14,5 +14,7 @@ import CLIENTS from "./CLIENTS";
 messageHandlers[WsEvent.CLIENTS] = CLIENTS;
 import PAYLOADSTATUS from "./PAYLOADSTATUS";
 messageHandlers[WsEvent.PAYLOADSTATUS] = PAYLOADSTATUS;
+import PAYLOADERROR from "./PAYLOADERROR";
+messageHandlers[WsEvent.PAYLOADERROR] = PAYLOADERROR;
 
 export default messageHandlers;
