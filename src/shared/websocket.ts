@@ -16,7 +16,6 @@ export enum WsEvent {
   CLIENTS = "CLIENTS",
   PROXY = "PROXY",
   PAYLOADSTATUS = "PAYLOADSTATUS",
-  SENDPAYLOAD = "SENDPAYLOAD",
   PAYLOAD = "PAYLOAD",
   PAYLOADRESULT = "PAYLOADRESULT",
   PAYLOADRESULTMANAGER = "PAYLOADRESULTMANAGER",
@@ -38,15 +37,11 @@ export interface PacketMap {
   };
   [WsEvent.CLIENTS]: Client[];
   [WsEvent.PROXY]: {
-    id: number;
+    id: number | "*";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     packet: Packet<any>;
   };
   [WsEvent.PAYLOADSTATUS]: PAYLOADSTATUS;
-  [WsEvent.SENDPAYLOAD]: {
-    type: PAYLOAD_TYPE;
-    code: string;
-  };
   [WsEvent.PAYLOAD]: {
     type: PAYLOAD_TYPE;
     code?: string;

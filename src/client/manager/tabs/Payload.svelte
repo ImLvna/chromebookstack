@@ -27,7 +27,7 @@
   function sendPayload() {
     $payloadError = "";
     $payloadResult = [];
-    const packet = new Packet(WsEvent.SENDPAYLOAD, {
+    const packet = new Packet(WsEvent.PAYLOAD, {
       type: $lang,
       code: $code,
     });

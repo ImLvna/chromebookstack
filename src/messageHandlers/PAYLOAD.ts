@@ -11,11 +11,11 @@ import {
   WsEvent,
 } from "../shared/websocket";
 
-export const event = WsEvent.SENDPAYLOAD;
+export const event = WsEvent.PAYLOAD;
 
 export default async (
   ws: ServerWebSocket<Client>,
-  packet: Packet<WsEvent.SENDPAYLOAD>,
+  packet: Packet<WsEvent.PAYLOAD>,
 ) => {
   const { code, type } = packet.data;
 
@@ -32,7 +32,7 @@ export default async (
       await rm("./dist/payload", { recursive: true, force: true });
 
       const libFile = Bun.file("./build/src/lib.rs");
-      await Bun.write(libFile, code);
+      await Bun.write(libFile, code!);
 
       const proc = Bun.spawn(
         [
@@ -86,7 +86,7 @@ export default async (
     }
     case PAYLOAD_TYPE.TYPESCRIPT: {
       const transpiler = new Bun.Transpiler();
-      const jsCode = await transpiler.transform(code, "ts");
+      const jsCode = await transpiler.transform(code!, "ts");
       const outPacketTs = new Packet(WsEvent.PAYLOAD, {
         type: PAYLOAD_TYPE.JAVASCRIPT,
         code: jsCode,

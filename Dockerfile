@@ -1,5 +1,7 @@
 FROM "oven/bun"
 
+RUN apt update
+RUN apt install -y curl
 # Install rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
