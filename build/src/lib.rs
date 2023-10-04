@@ -1,4 +1,3 @@
-mod utils;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -11,5 +10,5 @@ extern "C" {
 #[wasm_bindgen]
 pub fn main() {
     // Your code here
-    log("Hello from Rust!");
+    log("Hello from Rustpenis!");
 }

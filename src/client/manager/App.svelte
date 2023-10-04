@@ -36,11 +36,7 @@
   function connectWs() {
     ws = new WebSocket("ws://localhost:8080/manager/ws");
     window.ws = ws;
-    ws.onopen = () => {
-      console.log("CONNECTED");
-    };
     ws.onclose = () => {
-      console.log("DISCONNECTED");
       setTimeout(connectWs, 100);
     };
     ws.onmessage = (msg: MessageEvent<string>) => {
@@ -48,10 +44,6 @@
       const packet = new Packet(packetJson.event, packetJson.data);
       if (messageHandlers[packet.event])
         messageHandlers[packet.event](ws, packet, contexts);
-      else console.log("No handler for event", packet.event);
-    };
-    ws.onerror = function (evt) {
-      console.log("ERROR", evt);
     };
   }
 

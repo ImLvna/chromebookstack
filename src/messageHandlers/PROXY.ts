@@ -7,10 +7,7 @@ export const event = WsEvent.PROXY;
 export default (ws: ServerWebSocket<Client>, packet: Packet<WsEvent.PROXY>) => {
   const client = clients.find((c) => c.data.id === packet.data.id);
 
-  if (!client) {
-    console.log(`Client ${packet.data.id} not found`);
-    return;
-  }
+  if (!client) return;
 
   // packet data packet data packet data packet data packet data packet data
   const outPacket = new Packet(

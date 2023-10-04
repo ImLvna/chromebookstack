@@ -41,7 +41,6 @@ function registerWs(type: ClientType, server: Server, req: Request) {
       break;
     }
   }
-  console.log(`Client ${id} connected`);
   const success = server.upgrade(req, {
     data: {
       id,
@@ -91,7 +90,6 @@ Bun.serve<Client>({
       clients.push(ws);
     },
     close(ws) {
-      console.log(`Client ${ws.data.id} disconnected`);
       clients.splice(clients.indexOf(ws), 1);
     },
     message(ws, message: string) {
@@ -107,8 +105,6 @@ Bun.serve<Client>({
 
       if (event in messageHandlers) {
         messageHandlers[event](ws, packet);
-      } else {
-        console.log(`Unknown event ${event}`);
       }
     },
   },
@@ -120,7 +116,6 @@ setInterval(() => {
   const packet = new Packet(WsEvent.HEARTBEAT, undefined);
   clients.forEach((client) => {
     if (Date.now() - client.data.lastHeartbeat > 10000) {
-      console.log(`Client ${client.data.id} timed out`);
       client.close();
     }
   });
@@ -134,3 +129,5 @@ setInterval(() => {
   );
   packet.sendAll(clients, ClientType.MANAGER);
 }, 100);
+
+console.log("Server started");

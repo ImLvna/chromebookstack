@@ -16,8 +16,7 @@
 
   let editor: editor.IStandaloneCodeEditor;
 
-  const defaultCode = `mod utils;
-use wasm_bindgen::prelude::*;
+  const defaultCode = `use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 extern "C" {

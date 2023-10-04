@@ -28,16 +28,14 @@ export default async (
   const libFile = Bun.file("./build/src/lib.rs");
   Bun.write(libFile, code);
 
-  // cd build && wasm-pack build --target web --out-name wasm --out-dir ../public/payload
-
-  console.log("Building worker");
-
   const proc = Bun.spawn(
     [
       "wasm-pack",
       "build",
       "--target",
       "web",
+      "--no-typescript",
+      "--no-pack",
       "--out-name",
       "wasm",
       "--out-dir",
@@ -49,9 +47,7 @@ export default async (
     }
   );
 
-  await new Response(proc.stdout).text();
-
-  console.log("Built worker");
+  await new Response(proc.stderr).text();
 
   statusPacket.data = PAYLOADSTATUS.RUNNING;
   statusPacket.sendAll(clients, ClientType.MANAGER);

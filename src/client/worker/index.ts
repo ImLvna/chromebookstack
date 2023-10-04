@@ -28,16 +28,11 @@ function main() {
   window.ws = ws;
 
   ws.onopen = () => {
-    console.log("Connected");
     setStatus(ClientStatus.IDLE);
   };
   ws.onclose = () => {
-    console.log("Disconnected");
     setStatus(ClientStatus.ERROR);
     setTimeout(main, 1000);
-  };
-  ws.onerror = (e) => {
-    console.log("Error", e);
   };
 
   ws.onmessage = (e) => {
@@ -48,8 +43,6 @@ function main() {
     const handler = messageHandlers[event];
     if (handler) {
       handler(ws, new Packet(event, data));
-    } else {
-      console.log("Unhandled message", event, data);
     }
   };
 }
