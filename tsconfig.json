@@ -21,10 +21,13 @@
       "bun-types" // add Bun global
     ]
   },
-  "include": ["src/client/**/*", "src/shared/**/*"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "vite.config.ts",
+    "./build.ts",
+    "./.eslintrc.cjs"
   ]
 }

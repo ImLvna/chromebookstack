@@ -1,31 +1,32 @@
 import type { ServerWebSocket } from "bun";
+import { rm } from "fs/promises";
+
+import { clients } from "..";
 import {
   type Client,
-  Packet,
-  WsEvent,
-  PAYLOADSTATUS,
   ClientType,
+  Packet,
   PAYLOAD_TYPE,
+  PAYLOADSTATUS,
+  WsEvent,
 } from "../shared/websocket";
-import { rename, rm } from "fs/promises";
-import { clients } from "..";
 
 export const event = WsEvent.SENDPAYLOAD;
 
 export default async (
   ws: ServerWebSocket<Client>,
-  packet: Packet<WsEvent.SENDPAYLOAD>
+  packet: Packet<WsEvent.SENDPAYLOAD>,
 ) => {
   const { code, type } = packet.data;
 
   const statusPacket = new Packet(
     WsEvent.PAYLOADSTATUS,
-    PAYLOADSTATUS.COMPILING
+    PAYLOADSTATUS.COMPILING,
   );
   statusPacket.sendAll(clients, ClientType.MANAGER);
 
   switch (type) {
-    case PAYLOAD_TYPE.RUST:
+    case PAYLOAD_TYPE.RUST: {
       // Build the worker
 
       await rm("./dist/payload", { recursive: true, force: true });
@@ -49,7 +50,7 @@ export default async (
         {
           cwd: "./build",
           stdio: ["ignore", "ignore", "pipe"],
-        }
+        },
       );
 
       const output = await new Response(proc.stderr).text();
@@ -72,8 +73,8 @@ export default async (
       payloadPacket.sendAll(clients, ClientType.WORKER);
 
       break;
-
-    case PAYLOAD_TYPE.JAVASCRIPT:
+    }
+    case PAYLOAD_TYPE.JAVASCRIPT: {
       const outPacketJs = new Packet(WsEvent.PAYLOAD, {
         type,
         code,
@@ -82,8 +83,8 @@ export default async (
       statusPacket.sendAll(clients, ClientType.MANAGER);
       outPacketJs.sendAll(clients, ClientType.WORKER);
       break;
-
-    case PAYLOAD_TYPE.TYPESCRIPT:
+    }
+    case PAYLOAD_TYPE.TYPESCRIPT: {
       const transpiler = new Bun.Transpiler();
       const jsCode = await transpiler.transform(code, "ts");
       const outPacketTs = new Packet(WsEvent.PAYLOAD, {
@@ -94,5 +95,6 @@ export default async (
       statusPacket.sendAll(clients, ClientType.MANAGER);
       outPacketTs.sendAll(clients, ClientType.WORKER);
       break;
+    }
   }
 };

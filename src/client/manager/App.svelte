@@ -1,18 +1,13 @@
 <script lang="ts">
-  import { writable } from "svelte/store";
-  import {
-    ClientType,
-    Packet,
-    WsEvent,
-    type Client,
-    PAYLOADSTATUS,
-  } from "../../shared/websocket";
-  import messageHandlers from "./messageHandlers";
   import { setContext as _setContext } from "svelte";
-  import { CURRENT_TAB, Tabs, type Contexts } from "./types/contexts";
+  import { writable } from "svelte/store";
   import { slide } from "svelte/transition";
 
-  const contexts: Contexts = {} as any;
+  import { type Client, Packet, PAYLOADSTATUS } from "../../shared/websocket";
+  import messageHandlers from "./messageHandlers";
+  import { type Contexts, CURRENT_TAB, Tabs } from "./types/contexts";
+
+  const contexts: Contexts = {} as Contexts;
 
   function setContext<T>(key: string, value: T) {
     contexts[key] = value;
@@ -39,6 +34,7 @@
   const payloadError = writable<string>("");
   setContext("payloadError", payloadError);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const payloadResult = writable<any[]>([]);
   setContext("payloadResult", payloadResult);
 
@@ -76,18 +72,17 @@
     }
   }
 
+  function setTab(tab: string) {
+    $currentTab = tab as unknown as CURRENT_TAB;
+  }
+
   connectWs();
 </script>
 
 <div class="sticky">
   <div class="tabs">
     {#each Object.keys(Tabs) as tab}
-      <button
-        class:active={$currentTab === tab}
-        on:click={() =>
-          // @ts-ignore
-          ($currentTab = tab)}
-      >
+      <button class:active={$currentTab === tab} on:click={() => setTab(tab)}>
         {tab}
       </button>
     {/each}

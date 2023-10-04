@@ -1,14 +1,14 @@
-import { setStatus } from "..";
 import {
   ClientStatus,
-  PAYLOAD_TYPE,
   Packet,
+  PAYLOAD_TYPE,
   WsEvent,
 } from "../../../shared/websocket";
+import { setStatus } from "..";
 
 declare global {
   interface Window {
-    getPayload: () => Promise<() => any>;
+    getPayload: () => Promise<() => () => unknown>;
   }
 }
 

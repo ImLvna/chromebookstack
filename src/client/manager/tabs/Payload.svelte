@@ -1,16 +1,14 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { writable, type Writable } from "svelte/store";
+  import { type Writable, writable } from "svelte/store";
+
   import {
-    WsEvent,
-    type Client,
     Packet,
-    PAYLOADSTATUS,
     PAYLOAD_TYPE,
+    PAYLOADSTATUS,
+    WsEvent,
   } from "../../../shared/websocket";
-  import type { editor } from "monaco-editor";
   import Monaco from "../components/Monaco.svelte";
-  import { CURRENT_TAB } from "../types/contexts";
 
   const payloadStatus = getContext<Writable<PAYLOADSTATUS>>("payloadStatus");
   const payloadError = getContext<Writable<string>>("payloadError");

@@ -1,8 +1,9 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { writable, type Writable } from "svelte/store";
-  import { WsEvent, type Client, Packet } from "../../../shared/websocket";
-  import type { editor } from "monaco-editor";
+  import { type Writable, writable } from "svelte/store";
+
+  import { type Client, Packet } from "../../../shared/websocket";
+  import { WsEvent } from "../../../shared/websocket";
   import Monaco from "../components/Monaco.svelte";
   import { CURRENT_TAB } from "../types/contexts";
 
@@ -12,7 +13,7 @@
   const notification = getContext<Writable<string>>("notification");
   const evalResult = getContext<Writable<string>>("evalResult");
 
-  const client = writable<Client>({} as any);
+  const client = writable<Client>({} as Client);
   $: {
     const _client = $clients.find((c) => c.id === $currentClient);
     if (_client) $client = _client;
@@ -28,7 +29,7 @@
     $evalResult = "";
     const packet = new Packet(
       packetType,
-      packetType === WsEvent.EVAL ? $code : JSON.parse($code)
+      packetType === WsEvent.EVAL ? $code : JSON.parse($code),
     );
     const outPacket = new Packet(WsEvent.PROXY, {
       id: $client.id,

@@ -1,7 +1,8 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import type { Writable } from "svelte/store";
-  import type { Client } from "../../../shared/websocket";
+
+  import { type Client } from "../../../shared/websocket";
   import { CURRENT_TAB } from "../types/contexts";
 
   const clients = getContext<Writable<Client[]>>("clients");

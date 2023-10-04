@@ -1,10 +1,11 @@
-import { setStatus } from "..";
 import { ClientStatus, Packet, WsEvent } from "../../../shared/websocket";
+import { setStatus } from "..";
 
 export default async (ws: WebSocket, packet: Packet<WsEvent.EVAL>) => {
   setStatus(ClientStatus.RUNNING);
+  let result;
   try {
-    var result = await eval(packet.data);
+    result = await eval(packet.data);
   } catch (e) {
     result = e;
   }

@@ -1,12 +1,13 @@
 import type { ServerWebSocket } from "bun";
-import { type Client, Packet, WsEvent, ClientType } from "../shared/websocket";
+
 import { clients } from "..";
+import { type Client, ClientType, Packet, WsEvent } from "../shared/websocket";
 
 export const event = WsEvent.EVALRESULT;
 
 export default (
   ws: ServerWebSocket<Client>,
-  packet: Packet<WsEvent.EVALRESULT>
+  packet: Packet<WsEvent.EVALRESULT>,
 ) => {
   const managerPacket = new Packet(WsEvent.EVALRESULTMANAGER, {
     id: ws.data.id,

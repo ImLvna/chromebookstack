@@ -1,5 +1,4 @@
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { mkdir, rm } from "fs/promises";
 import { defineConfig } from "vite";
 
 const defaultRust = await Bun.file("./build/default.rs").text();

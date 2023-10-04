@@ -1,11 +1,6 @@
 /// <reference lib="dom" />
 
-import {
-  ClientStatus,
-  ClientType,
-  Packet,
-  WsEvent,
-} from "../../shared/websocket";
+import { ClientStatus, Packet, WsEvent } from "../../shared/websocket";
 import messageHandlers from "./messageHandlers";
 
 declare global {
@@ -54,6 +49,7 @@ function main() {
 
 const logsEl = document.getElementById("logs") as HTMLUListElement;
 const oldLog = console.log;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 console.log = (...args: any[]) => {
   oldLog(...args);
   const li = document.createElement("li");
@@ -61,6 +57,7 @@ console.log = (...args: any[]) => {
   logsEl.prepend(li);
 };
 const oldError = console.error;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 console.error = (...args: any[]) => {
   oldError(...args);
   const li = document.createElement("li");

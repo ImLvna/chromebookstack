@@ -29,16 +29,17 @@ export interface PacketMap {
   [WsEvent.EVAL]: string;
   [WsEvent.EVALRESULT]: {
     code: string;
-    result: any;
+    result: unknown;
   };
   [WsEvent.EVALRESULTMANAGER]: {
     id: number;
     code: string;
-    result: any;
+    result: unknown;
   };
   [WsEvent.CLIENTS]: Client[];
   [WsEvent.PROXY]: {
     id: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     packet: Packet<any>;
   };
   [WsEvent.PAYLOADSTATUS]: PAYLOADSTATUS;
@@ -50,10 +51,10 @@ export interface PacketMap {
     type: PAYLOAD_TYPE;
     code?: string;
   };
-  [WsEvent.PAYLOADRESULT]: any;
+  [WsEvent.PAYLOADRESULT]: unknown;
   [WsEvent.PAYLOADRESULTMANAGER]: {
     id: number;
-    result: any;
+    result: unknown;
   };
   [WsEvent.PAYLOADERROR]: string;
 }
@@ -73,7 +74,7 @@ export class Packet<T extends WsEvent> {
       JSON.stringify({
         event: this.event,
         data: this.data,
-      })
+      }),
     );
   }
 

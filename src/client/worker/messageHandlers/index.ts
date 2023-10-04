@@ -2,6 +2,7 @@ import { Packet, WsEvent } from "../../../shared/websocket";
 
 const messageHandlers: Record<
   string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (ws: WebSocket, packet: Packet<any>) => void
 > = {};
 

@@ -1,19 +1,20 @@
 import type { ServerWebSocket } from "bun";
+
+import { clients } from "..";
 import {
   type Client,
-  Packet,
-  WsEvent,
-  PAYLOADSTATUS,
-  ClientType,
   ClientStatus,
+  ClientType,
+  Packet,
+  PAYLOADSTATUS,
+  WsEvent,
 } from "../shared/websocket";
-import { clients } from "..";
 
 export const event = WsEvent.PAYLOADRESULT;
 
 export default async (
   ws: ServerWebSocket<Client>,
-  packet: Packet<WsEvent.PAYLOADRESULT>
+  packet: Packet<WsEvent.PAYLOADRESULT>,
 ) => {
   const managerPacket = new Packet(WsEvent.PAYLOADRESULTMANAGER, packet.data);
   managerPacket.sendAll(clients, ClientType.MANAGER);
@@ -24,7 +25,7 @@ export default async (
         (c.data.status === ClientStatus.IDLE ||
           c.data.status === ClientStatus.ERROR) &&
         a,
-      true
+      true,
     )
   ) {
     const statusPacket = new Packet(WsEvent.PAYLOADSTATUS, PAYLOADSTATUS.IDLE);

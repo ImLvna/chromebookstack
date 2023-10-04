@@ -1,16 +1,18 @@
-import { readdir, stat } from "fs/promises";
+import type { Server, ServerWebSocket } from "bun";
+import { readdir } from "fs/promises";
+import { Router } from "itty-router";
+
 import {
   type Client,
-  WsEvent,
   ClientStatus,
-  Packet,
   ClientType,
+  Packet,
+  WsEvent,
 } from "./shared/websocket";
-import type { Server, ServerWebSocket } from "bun";
-import { Router } from "itty-router";
 
 const messageHandlers: Record<
   string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (ws: ServerWebSocket<Client>, packet: Packet<any>) => void
 > = {};
 
@@ -69,7 +71,7 @@ app.get("/worker/*", (req) => {
   return new Response(Bun.file("./dist" + new URL(req.url).pathname));
 });
 
-app.get("/manager", (req) => {
+app.get("/manager", () => {
   return new Response(Bun.file("./dist/manager/index.html"));
 });
 app.get("/manager/*", (req) => {
@@ -125,7 +127,7 @@ setInterval(() => {
 setInterval(() => {
   const packet = new Packet(
     WsEvent.CLIENTS,
-    clients.map((c) => c.data).filter((c) => c.type === ClientType.WORKER)
+    clients.map((c) => c.data).filter((c) => c.type === ClientType.WORKER),
   );
   packet.sendAll(clients, ClientType.MANAGER);
 }, 100);

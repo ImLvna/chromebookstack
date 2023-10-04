@@ -4,7 +4,7 @@ import type { Contexts } from "../types/contexts";
 export default (
   ws: WebSocket,
   packet: Packet<WsEvent.CLIENTS>,
-  contexts: Contexts
+  contexts: Contexts,
 ) => {
   contexts.clients.set(packet.data);
 };
