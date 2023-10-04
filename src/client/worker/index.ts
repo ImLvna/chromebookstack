@@ -28,9 +28,11 @@ function main() {
   window.ws = ws;
 
   ws.onopen = () => {
+    console.log("Connected to server");
     setStatus(ClientStatus.IDLE);
   };
   ws.onclose = () => {
+    console.log("Disconnected...");
     setStatus(ClientStatus.ERROR);
     setTimeout(main, 1000);
   };
@@ -47,4 +49,20 @@ function main() {
   };
 }
 
+const logsEl = document.getElementById("logs") as HTMLUListElement;
+const oldLog = console.log;
+console.log = (...args: any[]) => {
+  oldLog(...args);
+  const li = document.createElement("li");
+  li.innerText = args.join(" ");
+  logsEl.prepend(li);
+};
+const oldError = console.error;
+console.error = (...args: any[]) => {
+  oldError(...args);
+  const li = document.createElement("li");
+  li.innerText = args.join(" ");
+  li.style.color = "red";
+  logsEl.prepend(li);
+};
 main();

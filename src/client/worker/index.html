@@ -4,12 +4,19 @@
   </head>
   <body>
     <script src="/worker/index.js" type="module"></script>
-    <div class="inline">
+    <h1 class="inline">
       Status:&nbsp;
       <div id="status">loading</div>
-    </div>
+    </h1>
+    <h1>Logs</h1>
+    <ul id="logs"></ul>
 
     <style>
+      body {
+        background-color: #000;
+        color: #fff;
+        font-family: monospace;
+      }
       .inline {
         display: flex;
         flex-direction: row;

@@ -130,4 +130,10 @@ setInterval(() => {
   packet.sendAll(clients, ClientType.MANAGER);
 }, 100);
 
+// Refresh all clients when the server restarts
+setTimeout(() => {
+  const packet = new Packet(WsEvent.REFRESH, undefined);
+  packet.sendAll(clients);
+}, 1000);
+
 console.log("Server started");

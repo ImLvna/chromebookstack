@@ -8,6 +8,7 @@ declare global {
 }
 
 export default async (ws: WebSocket, packet: Packet<WsEvent.PAYLOAD>) => {
+  console.log("Running payload");
   setStatus(ClientStatus.DOWNLOADING);
   try {
     setStatus(ClientStatus.DOWNLOADING);
@@ -29,4 +30,5 @@ export default async (ws: WebSocket, packet: Packet<WsEvent.PAYLOAD>) => {
       setStatus(ClientStatus.IDLE);
     }, 1000);
   }
+  console.log("Finished payload");
 };
