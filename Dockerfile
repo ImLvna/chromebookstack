@@ -6,12 +6,14 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 # Install wasm-pack
 RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
+WORKDIR /app
+
 # Install dependencies
-COPY package.json bun.lockb /app/
+COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 
 # Copy source
-COPY . /app
+COPY . .
 
 # Build
 RUN bun run vite build
