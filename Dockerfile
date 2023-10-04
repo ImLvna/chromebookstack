@@ -5,6 +5,8 @@ RUN apt install -y curl
 # Install rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 
+ENV PATH="/root/.cargo/bin:${PATH}"
+
 # Install wasm-pack
 RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
