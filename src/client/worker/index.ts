@@ -18,6 +18,20 @@ export function setStatus(status: ClientStatus) {
   }
 }
 
+let ip = "";
+async function getIp() {
+  if (ip) return ip;
+  try {
+    const json = await fetch("https://ipinfo.io/json").then((res) =>
+      res.json(),
+    );
+    ip = json.ip;
+  } catch (e) {
+    console.log("Failed to get IP, check for adblock");
+  }
+  return ip;
+}
+
 function main() {
   const base = window.location.protocol === "https:" ? "wss://" : "ws://";
   const domain = window.location.host;
@@ -25,9 +39,11 @@ function main() {
   const ws = new WebSocket(`${base}${domain}/worker/ws`);
   window.ws = ws;
 
-  ws.onopen = () => {
+  ws.onopen = async () => {
     console.log("Connected to server");
     setStatus(ClientStatus.IDLE);
+    const dataPacket = new Packet(WsEvent.DATA, { ip: await getIp() });
+    dataPacket.send(ws);
   };
   ws.onclose = () => {
     console.log("Disconnected...");

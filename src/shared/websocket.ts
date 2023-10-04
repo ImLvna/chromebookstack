@@ -20,6 +20,7 @@ export enum WsEvent {
   PAYLOADRESULT = "PAYLOADRESULT",
   PAYLOADRESULTMANAGER = "PAYLOADRESULTMANAGER",
   PAYLOADERROR = "PAYLOADERROR",
+  DATA = "DATA",
 }
 export interface PacketMap {
   [WsEvent.HEARTBEAT]: undefined;
@@ -52,6 +53,9 @@ export interface PacketMap {
     result: unknown;
   };
   [WsEvent.PAYLOADERROR]: string;
+  [WsEvent.DATA]: {
+    ip: string;
+  };
 }
 
 export class Packet<T extends WsEvent> {
@@ -102,6 +106,7 @@ export enum PAYLOAD_TYPE {
 
 export interface Client {
   id: number;
+  ip: string;
   status: ClientStatus;
   type: ClientType;
   lastHeartbeat: number;

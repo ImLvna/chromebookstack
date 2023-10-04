@@ -39,6 +39,7 @@ app.get("/worker/ws", (req, server: Server) => {
       id,
       status: ClientStatus.IDLE,
       type: ClientType.WORKER,
+      ip: "",
       lastHeartbeat: Date.now(),
     },
   });
@@ -54,6 +55,7 @@ app.get("/manager/ws", (req, server: Server) => {
       id: -1,
       status: ClientStatus.IDLE,
       type: ClientType.MANAGER,
+      ip: "",
       lastHeartbeat: Date.now(),
     },
   });

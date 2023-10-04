@@ -54,6 +54,7 @@
 </script>
 
 <h1>Client {$client.id}</h1>
+{#if $client.ip}<h2>{$client.ip}</h2>{/if}
 <h2>Status: {$client.status}</h2>
 
 <h1>Send a packet</h1>
