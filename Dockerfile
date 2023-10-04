@@ -15,6 +15,8 @@ RUN bun install --frozen-lockfile
 # Copy source
 COPY . .
 
+ENV NODE_ENV=production
+
 # Build
 RUN bun run build
 
