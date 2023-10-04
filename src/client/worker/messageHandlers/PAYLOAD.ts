@@ -12,8 +12,8 @@ export default async (ws: WebSocket, packet: Packet<WsEvent.PAYLOAD>) => {
   setStatus(ClientStatus.DOWNLOADING);
   try {
     setStatus(ClientStatus.DOWNLOADING);
-    // @ts-ignore
-    const { default: payload } = await import("/payload/wasm.js");
+    // Functions is in window, so vite doesnt bundle the import
+    const payload = await window.getPayload();
     setStatus(ClientStatus.RUNNING);
     let result = payload();
     setStatus(ClientStatus.UPLOADING);

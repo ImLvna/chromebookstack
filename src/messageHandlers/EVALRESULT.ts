@@ -6,4 +6,6 @@ export const event = WsEvent.EVALRESULT;
 export default (
   ws: ServerWebSocket<Client>,
   packet: Packet<WsEvent.EVALRESULT>
-) => {};
+) => {
+  console.log(ws.data.id, packet.data);
+};

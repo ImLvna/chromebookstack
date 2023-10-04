@@ -9,12 +9,16 @@
   const currentClient = getContext<Writable<number>>("currentClient");
   const clients = getContext<Writable<Client[]>>("clients");
   const currentTab = getContext<Writable<CURRENT_TAB>>("currentTab");
+  const notification = getContext<Writable<string>>("notification");
 
   const client = writable<Client>({} as any);
   $: {
     const _client = $clients.find((c) => c.id === $currentClient);
     if (_client) $client = _client;
-    else currentTab.set(CURRENT_TAB.HOME);
+    else {
+      notification.set("Please select a client first");
+      currentTab.set(CURRENT_TAB.HOME);
+    }
   }
 
   let editor: editor.IStandaloneCodeEditor;

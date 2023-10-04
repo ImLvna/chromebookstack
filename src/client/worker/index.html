@@ -4,6 +4,15 @@
   </head>
   <body>
     <script src="/worker/index.js" type="module"></script>
+    <script type="module">
+      async function getPayload() {
+        const payload = await import(
+          `/payload/wasm.js?cachebust=${Date.now()}`
+        );
+        return payload.default;
+      }
+      window.getPayload = getPayload;
+    </script>
     <h1 class="inline">
       Status:&nbsp;
       <div id="status">loading</div>

@@ -1,5 +1,6 @@
-import { Packet, WsEvent } from "../../../shared/websocket";
+import { PAYLOADSTATUS, Packet, WsEvent } from "../../../shared/websocket";
 import type { Contexts } from "../types/contexts";
+import { startUppercase } from "../utils";
 
 export default (
   ws: WebSocket,
@@ -7,4 +8,5 @@ export default (
   contexts: Contexts
 ) => {
   contexts.payloadStatus.set(packet.data);
+  contexts.notification.set(`Payload status: ${startUppercase(packet.data)}`);
 };

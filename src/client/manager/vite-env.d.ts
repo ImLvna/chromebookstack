@@ -6,3 +6,5 @@ declare global {
     ws: WebSocket;
   }
 }
+
+declare const DEFAULTPAYLOAD: string;

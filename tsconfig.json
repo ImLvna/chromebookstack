@@ -14,7 +14,6 @@
     "skipLibCheck": true,
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
     "suppressImplicitAnyIndexErrors": true,
     "ignoreDeprecations": "5.0",
     "allowJs": true,
@@ -22,10 +21,11 @@
       "bun-types" // add Bun global
     ]
   },
-  "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
-    }
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.js",
+    "src/**/*.svelte",
+    "vite.config.ts"
   ]
 }
