@@ -25,7 +25,7 @@ extern "C" {
     fn log(s: &str);
 }
 
-#[wasm_bindgen]
+#[wasm_bindgen(start)]
 pub fn main() {
     // Your code here
     log("Hello from Rust!");

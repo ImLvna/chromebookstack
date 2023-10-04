@@ -4,16 +4,6 @@
   </head>
   <body>
     <script src="/worker/index.js" type="module"></script>
-    <script type="module">
-      async function getPayload() {
-        const { default: setup } = await import(
-          `/payload/wasm.js?cachebust=${Date.now()}`
-        );
-        const instance = await setup();
-        return instance.main;
-      }
-      window.getPayload = getPayload;
-    </script>
     <div class="inline">
       Status:&nbsp;
       <div id="status">loading</div>

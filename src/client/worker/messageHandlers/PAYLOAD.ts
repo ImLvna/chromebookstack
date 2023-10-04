@@ -11,7 +11,8 @@ export default async (ws: WebSocket, packet: Packet<WsEvent.PAYLOAD>) => {
   setStatus(ClientStatus.DOWNLOADING);
   try {
     setStatus(ClientStatus.DOWNLOADING);
-    const payload = await window.getPayload();
+    // @ts-ignore
+    const { default: payload } = await import("/payload/wasm.js");
     setStatus(ClientStatus.RUNNING);
     let result = payload();
     setStatus(ClientStatus.UPLOADING);
