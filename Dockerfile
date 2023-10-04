@@ -16,7 +16,7 @@ RUN bun install --frozen-lockfile
 COPY . .
 
 # Build
-RUN bun run vite build
+RUN bun run build
 
 # Run
 ENTRYPOINT [ "bun", "run", "src/index.ts" ]
