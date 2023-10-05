@@ -81,4 +81,12 @@ console.error = (...args: any[]) => {
   li.style.color = "red";
   logsEl.prepend(li);
 };
+
+const nameElem = document.getElementById("name") as HTMLInputElement;
+nameElem.value = window.localStorage.getItem("name") || "";
+nameElem.onchange = () => {
+  const packet = new Packet(WsEvent.DATA, { name: nameElem.value });
+  packet.send(window.ws);
+};
+
 main();

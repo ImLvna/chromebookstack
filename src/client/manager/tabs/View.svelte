@@ -14,14 +14,27 @@
   const evalResult = getContext<Writable<string>>("evalResult");
 
   const client = writable<Client>({} as Client);
+  const clientName = writable<string>("");
   $: {
     const _client = $clients.find((c) => c.id === $currentClient);
-    if (_client) $client = _client;
-    else {
+    if (_client) {
+      $client = _client;
+      $clientName = _client.name || "";
+    } else {
       notification.set("Please select a client first");
       currentTab.set(CURRENT_TAB.HOME);
     }
   }
+
+  clientName.subscribe((name) => {
+    if ($client.name === name) return;
+    $client.name = name || undefined;
+    const packet = new Packet(WsEvent.DATA, {
+      id: $client.id,
+      name,
+    });
+    packet.send(window.ws);
+  });
 
   let packetType: WsEvent;
 
@@ -54,6 +67,7 @@
 </script>
 
 <h1>Client {$client.id}</h1>
+<input bind:value={$clientName} placeholder="Name" />
 {#if $client.ip}<h2>{$client.ip}</h2>{/if}
 <h2>Status: {$client.status}</h2>
 

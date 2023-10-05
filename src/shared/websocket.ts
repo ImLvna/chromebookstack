@@ -54,7 +54,9 @@ export interface PacketMap {
   };
   [WsEvent.PAYLOADERROR]: string;
   [WsEvent.DATA]: {
-    ip: string;
+    id?: number;
+    ip?: string;
+    name?: string;
   };
 }
 
@@ -106,6 +108,7 @@ export enum PAYLOAD_TYPE {
 
 export interface Client {
   id: number;
+  name?: string;
   ip: string;
   status: ClientStatus;
   type: ClientType;

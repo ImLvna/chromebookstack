@@ -14,5 +14,7 @@ import EVAL from "./EVAL";
 messageHandlers[WsEvent.EVAL] = EVAL;
 import PAYLOAD from "./PAYLOAD";
 messageHandlers[WsEvent.PAYLOAD] = PAYLOAD;
+import DATA from "./DATA";
+messageHandlers[WsEvent.DATA] = DATA;
 
 export default messageHandlers;

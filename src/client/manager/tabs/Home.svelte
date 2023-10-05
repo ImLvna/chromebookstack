@@ -20,7 +20,8 @@
         $currentTab = CURRENT_TAB.VIEW;
       }}
     >
-      <h2>{client.id}</h2>
+      <h2>{client.name || client.id}</h2>
+      {#if client.name}<p>({client.id})</p>{/if}
       {#if client.ip}<p>{client.ip}</p>{/if}
       <h2>{client.status}</h2>
     </button>
