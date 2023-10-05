@@ -15,8 +15,8 @@
 
   const client = writable<Client>({} as Client);
   const clientName = writable<string>("");
-  $: {
-    const _client = $clients.find((c) => c.id === $currentClient);
+  clients.subscribe((clients) => {
+    const _client = clients.find((c) => c.id === $currentClient);
     if (_client) {
       $client = _client;
       $clientName = _client.name || "";
@@ -24,11 +24,11 @@
       notification.set("Please select a client first");
       currentTab.set(CURRENT_TAB.HOME);
     }
-  }
+  });
 
   clientName.subscribe((name) => {
     if ($client.name === name) return;
-    $client.name = name || undefined;
+    console.log("Sending name change", name);
     const packet = new Packet(WsEvent.DATA, {
       id: $client.id,
       name,

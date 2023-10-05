@@ -84,7 +84,7 @@ console.error = (...args: any[]) => {
 
 const nameElem = document.getElementById("name") as HTMLInputElement;
 nameElem.value = window.localStorage.getItem("name") || "";
-nameElem.onchange = () => {
+nameElem.oninput = () => {
   const packet = new Packet(WsEvent.DATA, { name: nameElem.value });
   packet.send(window.ws);
 };
